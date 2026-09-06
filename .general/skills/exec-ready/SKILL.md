@@ -1,3 +1,8 @@
+---
+name: exec-ready
+description: Rewrite or audit the current document so an executive who pastes it into an LLM gets an accurate, useful summary on the first ask. Use when asked to make a document "exec-ready," "LLM-ready," or to audit/rewrite writing for clarity, structure, or summarizability.
+---
+
 Rewrite or audit the current document so an executive who pastes it into an LLM gets an accurate, useful summary on the first ask.
 
 ## Process

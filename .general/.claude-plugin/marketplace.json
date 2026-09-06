@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "caroline-skills",
+  "description": "Caroline's personal skills, shared between Claude Code and Codex CLI.",
+  "owner": {
+    "name": "Caroline Brewer"
+  },
+  "plugins": [
+    {
+      "name": "caroline-skills",
+      "description": "Personal skill bundle: design-system, file-issue, parametric-3d-printing, skill-gatekeeper, exec-ready.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
