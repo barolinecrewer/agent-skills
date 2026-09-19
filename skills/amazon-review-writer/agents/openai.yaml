@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amazon Review Writer"
+  short_description: "Write grounded, natural Amazon product reviews"
+  default_prompt: "Use $amazon-review-writer to draft an Amazon review from my firsthand product notes."
