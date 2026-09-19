@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 
-const PACKAGE_NAME = "@carolinebrewer/agent-skills";
+const PACKAGE_NAME = "@barolinecrewer/agent-skills";
 const MARKER_FILE = ".caroline-agent-skills.json";
 const sourceRoot = path.resolve(__dirname, "..", "skills");
 
