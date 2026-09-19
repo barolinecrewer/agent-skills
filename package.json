@@ -1,0 +1,25 @@
+{
+  "name": "@barolinecrewer/agent-skills",
+  "version": "0.1.0",
+  "description": "Install Caroline Brewer's agent skills into Codex and Claude Code.",
+  "bin": {
+    "caroline-agent-skills": "./scripts/install-skills.js"
+  },
+  "files": [
+    ".claude-plugin",
+    ".codex-plugin",
+    "scripts",
+    "skills",
+    "README.md"
+  ],
+  "keywords": [
+    "codex",
+    "claude-code",
+    "skills",
+    "agent-skills"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
