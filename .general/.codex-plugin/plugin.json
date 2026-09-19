@@ -1,9 +1,0 @@
-{
-  "name": "caroline-skills",
-  "version": "1.0.0",
-  "description": "Caroline's personal skills, shared between Claude Code and Codex CLI.",
-  "author": {
-    "name": "Caroline Brewer"
-  },
-  "skills": "./skills/"
-}
