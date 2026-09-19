@@ -1,0 +1,15 @@
+{
+  "name": "caroline-agent-skills",
+  "version": "0.1.0",
+  "description": "A curated, cross-agent collection of Caroline's reusable skills.",
+  "author": {
+    "name": "Caroline Brewer"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "skills",
+    "claude-code",
+    "codex",
+    "agent-skills"
+  ]
+}
