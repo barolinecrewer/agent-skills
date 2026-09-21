@@ -13,7 +13,7 @@ If the file already exists, show it and ask whether to update it. Don't overwrit
 ## Inspect (read-only; never read `.env`, `stack.env`, `Caddyfile`, or other secret files)
 
 - **Docs**: `README.md`, `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`. Look for stated conventions, deploy flow, and "never do X" rules.
-- **Commit style**: `git log --oneline -30`. Do commits already use conventional commits or gitmoji? Which scopes recur?
+- **Commit style**: `git log --oneline -30`. Do commits already use conventional commits? Which scopes recur?
 - **Branching**: default branch (`git symbolic-ref refs/remotes/origin/HEAD`), current branch, recent merge history (`git log --merges -10`). Direct pushes to the default branch, or PRs? Merge, squash, or rebase?
 - **CI**: `.github/workflows/*` (or other CI config). What triggers on push? Is it a deploy? Which workflows are worth watching?
 - **Pre-commit work**: lint/format/test scripts (`package.json`, `Makefile`, `pyproject.toml`, pre-commit config), and docs that must track the code (README sections, changelogs, generated files).
