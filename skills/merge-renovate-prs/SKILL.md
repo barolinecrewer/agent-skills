@@ -6,7 +6,9 @@ argument-hint: <repo>
 
 # Merge Renovate PRs
 
-Merge open Renovate PRs in `~/<repo>` (the argument; default to the current directory's repo), but only the low-risk ones. Leave everything else untouched.
+Merge open Renovate PRs in `~/<repo>` (the argument), but only the low-risk ones. Leave everything else untouched.
+
+**No argument:** apply this to the repo Claude/Codex was launched from: run `git rev-parse --show-toplevel` in the current directory, use its basename as `<repo>`, and run all `gh`/`git` commands there. Stop if the directory isn't a git repo.
 
 Read `repos/<repo>.md`, relative to this skill's directory, if it exists. It defines the repo's extra "safe" PR category, merge method, branch handling, and post-merge steps. If it doesn't exist, use only the defaults below and mention that at the end.
 
