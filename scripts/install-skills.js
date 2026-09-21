@@ -7,9 +7,10 @@ const path = require("node:path");
 const PACKAGE_NAME = "@barolinecrewer/agent-skills";
 const MARKER_FILE = ".caroline-agent-skills.json";
 const sourceRoot = path.resolve(__dirname, "..", "skills");
+const excluded = [];
 
 function usage(exitCode = 0) {
-  console.log(`\n${PACKAGE_NAME}\n\nUsage:\n  npx --yes ${PACKAGE_NAME} install [--all | --codex | --claude]\n  npx --yes ${PACKAGE_NAME} update  [--all | --codex | --claude]\n\nOptions:\n  --all                 Install to both agents (the default).\n  --codex               Install to $CODEX_HOME/skills or ~/.codex/skills.\n  --claude              Install to $CLAUDE_CONFIG_DIR/skills or ~/.claude/skills.\n  --codex-dir <path>    Override Codex's configuration directory.\n  --claude-dir <path>   Override Claude Code's configuration directory.\n  --force               Replace an existing skill that was not installed by this package.\n  --help                Show this help.\n\nThe update command uses the same safe installer. npx fetches the latest published package before it runs.\n`);
+  console.log(`\n${PACKAGE_NAME}\n\nUsage:\n  npx --yes ${PACKAGE_NAME} install [--all | --codex | --claude]\n  npx --yes ${PACKAGE_NAME} update  [--all | --codex | --claude]\n\nOptions:\n  --all                 Install to both agents (the default).\n  --codex               Install to $CODEX_HOME/skills or ~/.codex/skills.\n  --claude              Install to $CLAUDE_CONFIG_DIR/skills or ~/.claude/skills.\n  --codex-dir <path>    Override Codex's configuration directory.\n  --claude-dir <path>   Override Claude Code's configuration directory.\n  --exclude <path>      Skip a file or directory, relative to skills/ (repeatable), e.g. ship/repos/infra.md.\n  --force               Replace an existing skill that was not installed by this package.\n  --help                Show this help.\n\nThe update command uses the same safe installer. npx fetches the latest published package before it runs.\n`);
   process.exit(exitCode);
 }
 
@@ -22,6 +23,11 @@ function parseArgs(argv) {
     else if (arg === "--codex") result.targets.add("codex");
     else if (arg === "--claude") result.targets.add("claude");
     else if (arg === "--force") result.force = true;
+    else if (arg === "--exclude") {
+      const value = argv[++index];
+      if (!value) throw new Error("--exclude requires a path.");
+      excluded.push(path.resolve(sourceRoot, value));
+    }
     else if (arg === "--codex-dir" || arg === "--claude-dir") {
       const value = argv[++index];
       if (!value) throw new Error(`${arg} requires a path.`);
@@ -58,6 +64,7 @@ function installTo(agent, configDirectory, force) {
 
   for (const name of skillNames()) {
     const source = path.join(sourceRoot, name);
+    if (excluded.includes(source)) continue;
     const destination = path.join(destinationRoot, name);
     if (fs.existsSync(destination) && !owned(destination) && !force) {
       skipped.push(name);
@@ -66,7 +73,7 @@ function installTo(agent, configDirectory, force) {
     fs.rmSync(destination, { recursive: true, force: true });
     fs.cpSync(source, destination, {
       recursive: true,
-      filter: (entry) => ![".venv", ".venv311", "__pycache__"].includes(path.basename(entry))
+      filter: (entry) => ![".venv", ".venv311", "__pycache__"].includes(path.basename(entry)) && !excluded.includes(entry)
     });
     fs.writeFileSync(
       path.join(destination, MARKER_FILE),
