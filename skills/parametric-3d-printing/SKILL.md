@@ -1,6 +1,6 @@
 ---
 name: parametric-3d-printing
-description: "Use this skill when the user wants to design a 3D-printable physical object they intend to manufacture. Triggers: any mention of '3D print', 'STL', 'parametric model', 'Gridfinity', 'enclosure', 'bracket', 'mount', 'case', 'housing', 'CadQuery', 'OpenSCAD', or a specific FDM printer (Bambu Lab, Prusa, Ender); questions about print-friendly design, snap-fits, tolerances, or wall thickness; and requests for functional parts like Arduino enclosures, cable organizers, wall mounts, adapters, or mechanical components. Also fires when the user describes a real physical object to make, provided the goal is to manufacture it. Do NOT use for: 3D rendering, animation, game assets, digital-only art, photogrammetry, sculpting, editing an existing STL file the user already has, or any 3D work that is not heading toward a printer."
+description: Design 3D-printable parts (enclosures, brackets, mounts, Gridfinity) with CadQuery/OpenSCAD. Not for rendering, animation, or editing existing STLs.
 ---
 
 # Parametric 3D Printing with CadQuery

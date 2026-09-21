@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Commit and push a repo with a Conventional Commits + gitmoji message, then watch CI. Use when the user says "/ship <repo>", "ship it", or asks to commit and push changes. Takes a repo name (a directory under ~) and applies per-repo rules from repos/<repo>.md.
+description: Commit and push a repo with a Conventional Commits + gitmoji message, then watch CI. Applies per-repo rules from repos/<repo>.md. Use for /ship or commit-and-push requests.
 argument-hint: <repo>
 ---
 

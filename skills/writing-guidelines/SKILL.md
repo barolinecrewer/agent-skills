@@ -1,10 +1,7 @@
 ---
 name: writing-guidelines
-description: Review docs/prose for Writing Guidelines compliance. Use when asked to "review my docs", "check writing style", "audit prose", "review docs voice and tone", or "check this page against the writing handbook".
-metadata:
-  author: vercel
-  version: "1.0.0"
-  argument-hint: <file-or-pattern>
+description: Review docs and prose for Writing Guidelines compliance. Use for docs, style, or voice-and-tone reviews.
+argument-hint: <file-or-pattern>
 ---
 
 # Writing Guidelines

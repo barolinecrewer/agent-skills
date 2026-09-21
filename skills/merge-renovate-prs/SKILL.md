@@ -1,6 +1,6 @@
 ---
 name: merge-renovate-prs
-description: Merge open Renovate PRs, but only the low-risk ones (grouped safe updates and GitHub Actions bumps). Use when the user says "/merge-renovate-prs <repo>" or asks to merge Renovate/dependency PRs. Takes a repo name (a directory under ~) and applies per-repo rules from repos/<repo>.md.
+description: Merge only low-risk open Renovate PRs (grouped safe updates, GitHub Actions bumps), applying per-repo rules from repos/<repo>.md. Use for /merge-renovate-prs.
 argument-hint: <repo>
 ---
 

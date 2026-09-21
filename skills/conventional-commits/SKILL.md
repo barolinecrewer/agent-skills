@@ -1,6 +1,6 @@
 ---
 name: conventional-commits
-description: Guides writing git commit messages that follow the Conventional Commits v1.0.0 specification. Use this whenever the user asks to "write a commit message", "make a conventional commit", "generate a commit message", produce a changelog-friendly commit message, or review/lint an existing commit message for spec compliance. Also use when the user asks about semantic versioning implications of a change (feat/fix/BREAKING CHANGE → MINOR/PATCH/MAJOR). This skill generates commit message text only — it does not stage files or run `git commit`; do not use it for requests to actually apply/execute a commit.
+description: Write or lint git commit messages per Conventional Commits v1.0.0. Generates message text only; does not run git commit.
 ---
 
 # Conventional Commits

@@ -1,3 +1,8 @@
+---
+name: exec-ready
+description: Rewrite or audit a document so an executive pasting it into an LLM gets an accurate summary on the first ask.
+---
+
 Rewrite or audit the current document so an executive who pastes it into an LLM gets an accurate, useful summary on the first ask.
 
 ## Process

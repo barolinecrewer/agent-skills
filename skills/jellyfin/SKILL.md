@@ -1,3 +1,8 @@
+---
+name: jellyfin
+description: Interact with the Jellyfin instance at jellyfin.milopolis.org via its REST API. Use for library, playback, favorites, and user queries.
+---
+
 You are helping the user interact with their Jellyfin instance at https://jellyfin.milopolis.org via its REST API.
 
 ## Getting the API key

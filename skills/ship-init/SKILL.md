@@ -1,6 +1,6 @@
 ---
 name: ship-init
-description: Create a repo-specific ship file (repos/<repo>.md in the ship skill) by inspecting how a repo is worked on. Invoked by /ship when no repo argument is given and no repo file exists yet; also use when the user says "init ship for <repo>" or "set up /ship for this repo".
+description: Create a repo-specific repos/<repo>.md for the ship skill by inspecting how the repo is worked on. Use when /ship finds no repo file.
 argument-hint: [repo]
 ---
 

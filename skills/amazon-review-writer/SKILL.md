@@ -1,6 +1,6 @@
 ---
 name: amazon-review-writer
-description: Draft or revise concise Amazon product reviews from the user's actual experience and notes. Use for review titles and bodies, not product advertising or invented testimonials.
+description: Draft or revise concise Amazon product reviews from the user's real experience and notes. Not for ads or invented testimonials.
 ---
 
 # Amazon Review Writer
