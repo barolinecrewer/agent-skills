@@ -40,6 +40,7 @@ Generates a `.gitignore` via the gitignore.io API (`https://www.toptal.com/devel
 
    # Temp files
    /temp/
+   temp/
    ```
 
 5. Write the result to `.gitignore` in the project root. If one already exists, merge: keep any existing custom entries not covered by the generated content, append the new generated block under a `# --- gitignore.io: <list> ---` comment marker so re-runs can find and replace just that block instead of duplicating it.
