@@ -6,7 +6,7 @@ argument-hint: [repo]
 
 # Ship Init
 
-Write `/Users/carolinebrewer/agent-skills/skills/ship/repos/<repo>.md`, capturing this repo's ways of working so `/ship <repo>` can follow them. `<repo>` is the argument, or the basename of the current git repo's top-level directory.
+Write `repos/<repo>.md` in the ship skill's directory, capturing this repo's ways of working so `/ship <repo>` can follow them. `<repo>` is the argument, or the basename of the current git repo's top-level directory.
 
 If the file already exists, show it and ask whether to update it. Don't overwrite silently.
 
