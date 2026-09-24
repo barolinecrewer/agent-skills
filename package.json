@@ -5,6 +5,10 @@
   "bin": {
     "caroline-agent-skills": "./scripts/install-skills.js"
   },
+  "scripts": {
+    "lint:skills": "node scripts/lint-skills.js",
+    "test:skills": "npm run lint:skills"
+  },
   "files": [
     ".claude-plugin",
     ".codex-plugin",
@@ -21,5 +25,8 @@
   "engines": {
     "node": ">=18"
   },
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "js-yaml": "^5.4.2"
+  }
 }

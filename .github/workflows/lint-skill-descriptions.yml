@@ -1,0 +1,34 @@
+name: Lint Skill Descriptions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**/SKILL.md'
+      - '.github/workflows/lint-skill-descriptions.yml'
+      - 'scripts/lint-skills.js'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'skills/**/SKILL.md'
+      - '.github/workflows/lint-skill-descriptions.yml'
+      - 'scripts/lint-skills.js'
+
+jobs:
+  lint:
+    name: Lint skill descriptions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install js-yaml
+        run: npm install js-yaml
+
+      - name: Run lint script
+        run: node scripts/lint-skills.js
