@@ -1,6 +1,6 @@
 ---
 name: tpdb-posters
-description: Download posters from ThePosterDB (a set URL or a whole uploader's page) and apply them as local artwork (folder.jpg, seasonNN-poster.jpg) in a Jellyfin/Kodi NFO media library over SSH. Use when asked to grab, apply, or swap posters from theposterdb.com.
+description: Download posters from ThePosterDB (a set URL or a whole uploader's page), apply them as local artwork (folder.jpg, seasonNN-poster.jpg) in a Jellyfin/Kodi NFO media library over SSH, and refresh Jellyfin and Silo so they pick them up. Use when asked to grab, apply, or swap posters from theposterdb.com.
 argument-hint: <theposterdb set or user URL>
 ---
 
@@ -26,7 +26,16 @@ Work in the session scratchpad; call it `$W`. `$T` is this skill's directory.
    B=<stage>; M=<root>; while IFS="	" read -r id dest t; do d=$(dirname "$M/$dest"); [ -d "$d" ] || { echo "MISSING $dest"; continue; }; mkdir -p "$(dirname "$B/backup/$dest")"; [ -f "$M/$dest" ] && [ ! -f "$B/backup/$dest" ] && cp -p "$M/$dest" "$B/backup/$dest"; cp "$B/new/$id.jpg" "$M/$dest" || echo "FAIL $dest"; done < $B/new/plan.tsv
    ```
    The backup is written only once, so a re-run never overwrites the true original. Restoring is `cp -a $B/backup/. $M/`.
-7. **Refresh the media server** as the host file says. Then report what was applied, what was skipped and why, and where the backups are.
+7. **Refresh the media servers** the host file lists, using the method it gives for each.
+8. **Silo** (only if the host file lists it). Silo reads sidecar art only when the library's **NFO Files** metadata provider is on, and it picks the art up per item on a refresh.
+   - Run `python3 $T/tpdb.py folders $W/plan.tsv > $W/folders.txt`.
+   - Run `python3 $T/tpdb.py silo-sql $W/folders.txt <silo-media-root> > $W/silo.sql`. Pipe that SQL into Silo's Postgres on the host and save the output as tab-separated `$W/silo.tsv` (`psql -At -F "<TAB>"`).
+   - Read each folder's NFO TMDB ID into `$W/nfo.tsv`, one `<rel>\t<tmdb>` per line:
+     ```sh
+     cd <root>; while read -r rel; do n="$rel/movie.nfo"; [ -f "$n" ] || n="$rel/tvshow.nfo"; printf "%s\t%s\n" "$rel" "$(grep -m1 -oE "<uniqueid type=\"tmdb\"[^>]*>[0-9]+|<tmdbid>[0-9]+" "$n" 2>/dev/null | grep -oE "[0-9]+$")"; done < folders.txt
+     ```
+   - Run `SILO_URL=… SILO_API_KEY=… python3 $T/tpdb.py silo-refresh $W/silo.tsv $W/nfo.tsv`. This queues a quick refresh for each item. Admin item refreshes are *manual* refreshes, where NFO IDs override Silo's match, so any item whose NFO TMDB ID disagrees with Silo's is **skipped and reported** rather than refreshed. Pass those to the user, who should fix the NFO first. Folders missing from `silo.tsv` aren't in Silo yet; a library scan will add them.
+9. Report what was applied, what was skipped and why, and where the backups are.
 
 ## Notes
 

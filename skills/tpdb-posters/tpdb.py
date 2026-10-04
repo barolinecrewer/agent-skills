@@ -4,12 +4,15 @@
   tpdb.py scrape <set-or-user-url>            > posters.tsv   (id, type, title)
   tpdb.py match posters.tsv library.txt [--skip done.txt] > plan.tsv  (id, dest, title)
   tpdb.py fetch plan.tsv <outdir>             downloads <id>.jpg for every plan row
+  tpdb.py folders plan.tsv                    > folders.txt   (movies/X, tv/Y: one per touched item)
+  tpdb.py silo-sql folders.txt <silo-media-root> > silo.sql   (rel, content_id, tmdb_id)
+  tpdb.py silo-refresh silo.tsv nfo.tsv       POST a quick metadata refresh per item (env SILO_URL, SILO_API_KEY)
   tpdb.py selftest
 
 library.txt is produced on the media host by the listing snippet in SKILL.md:
 TV lines "<folder>\t<year>\t<Season 1,Specials,...>", then "@@", then movie folders.
 """
-import html, re, subprocess, sys, time, unicodedata, urllib.request
+import html, json, os, re, subprocess, sys, time, unicodedata, urllib.request
 from pathlib import Path
 
 UA = {"User-Agent": "Mozilla/5.0"}
@@ -109,6 +112,40 @@ def fetch(plan_rows, outdir):
         time.sleep(1)
 
 
+def folders(plan_rows):
+    return sorted({"/".join(r[1].split("/")[:2]) for r in plan_rows})
+
+
+def silo_sql(rels, root):
+    q = lambda v: "'" + v.replace("'", "''") + "'"
+    vals = ",".join(f"({q(r)})" for r in rels)
+    return (f"with t(rel) as (values {vals}) select t.rel, mi.content_id, coalesce(mi.tmdb_id::text, '') from t "
+            f"cross join lateral (select content_id from media_files where starts_with(file_path, {q(root.rstrip('/') + '/')} || t.rel || '/') limit 1) f "
+            "join media_items mi on mi.content_id = f.content_id;")
+
+
+def silo_targets(silo_rows, nfo_ids):
+    """Admin item refresh is a *manual* refresh, where NFO <uniqueid>s beat Silo's stored match.
+    Skip items whose NFO tmdb id disagrees with Silo's, so a stale NFO can't re-anchor them."""
+    go, skipped = [], []
+    for rel, cid, silo_tmdb in silo_rows:
+        nfo = nfo_ids.get(rel, "")
+        (skipped if nfo and silo_tmdb and nfo != silo_tmdb else go).append((rel, cid, nfo, silo_tmdb))
+    return go, skipped
+
+
+def silo_refresh(go):
+    url, key = os.environ["SILO_URL"].rstrip("/"), os.environ["SILO_API_KEY"]
+    for rel, cid, *_ in go:
+        req = urllib.request.Request(f"{url}/api/v2/admin/items/{cid}/refresh-metadata", data=b'{"mode":"quick"}', method="POST",
+                                     headers={**UA, "Authorization": f"Bearer {key}", "Content-Type": "application/json"})
+        try:
+            urllib.request.urlopen(req, timeout=30)
+            print(f"queued\t{rel}")
+        except urllib.error.HTTPError as e:
+            print(f"FAIL {e.code}\t{rel}\t{e.read()[:200]!r}", file=sys.stderr)
+
+
 def selftest():
     lib = ("Ted Lasso\t2020\t\nEuphoria (US)\t2019\tSeason 1,Season 2,\nBoJack\t2014\tSeason 01,Specials,\n@@\n"
            "Toy Story 3 (2009)\nCoco (2017)\nWALL·E (2008)\n")
@@ -128,6 +165,11 @@ def selftest():
         "tv/BoJack/season01-poster.jpg": "8",
         "tv/BoJack/season-specials-poster.jpg": "9",
     }, p
+    assert folders([("1", "movies/A (1)/folder.jpg", ""), ("2", "tv/B/season01-poster.jpg", ""), ("3", "tv/B/folder.jpg", "")]) == ["movies/A (1)", "tv/B"]
+    assert "('movies/A Bug''s Life (1998)')" in silo_sql(["movies/A Bug's Life (1998)"], "/mnt/media/")
+    go, skip = silo_targets([("m/Ok", "c1", "5"), ("m/Bad", "c2", "6"), ("m/Local", "local-x", ""), ("m/NoNfo", "c4", "8")],
+                            {"m/Ok": "5", "m/Bad": "7", "m/Local": "9"})
+    assert [g[0] for g in go] == ["m/Ok", "m/Local", "m/NoNfo"] and [k[0] for k in skip] == ["m/Bad"], (go, skip)
     print("ok")
 
 
@@ -143,6 +185,17 @@ if __name__ == "__main__":
             print(f"{pid}\t{dest}\t{t}")
     elif cmd == "fetch":
         fetch([l.split("\t") for l in Path(a[0]).read_text().splitlines() if l], a[1])
+    elif cmd == "folders":
+        print("\n".join(folders([l.split("\t") for l in Path(a[0]).read_text().splitlines() if l])))
+    elif cmd == "silo-sql":
+        print(silo_sql([l for l in Path(a[0]).read_text().splitlines() if l], a[1]))
+    elif cmd == "silo-refresh":
+        rows = [l.split("\t") for l in Path(a[0]).read_text().splitlines() if l]
+        nfo = dict(l.split("\t")[:2] for l in Path(a[1]).read_text().splitlines() if "\t" in l)
+        go, skipped = silo_targets(rows, nfo)
+        for rel, cid, n, st in skipped:
+            print(f"SKIP\t{rel}\tNFO tmdb {n} != Silo tmdb {st} ({cid}); fix the NFO, then refresh by hand")
+        silo_refresh(go)
     elif cmd == "selftest":
         selftest()
     else:
