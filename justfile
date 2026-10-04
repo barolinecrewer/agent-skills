@@ -5,4 +5,5 @@ ncl:
     {{install}} \
         --exclude ship/repos/infra.md \
         --exclude merge-renovate-prs/repos/infra.md \
-        --exclude amazon-review-writer
+        --exclude amazon-review-writer \
+        --exclude tpdb-posters
